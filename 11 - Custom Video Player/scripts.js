@@ -6,6 +6,9 @@ const progressBar = player.querySelector('.progress__filled');
 const toggle = player.querySelector('.toggle');
 const skipButtons = player.querySelectorAll('[data-skip]');
 const ranges = player.querySelectorAll('.player__slider');
+// Bug: When in fullscreen mode, the custom video buttons disappear and are replaced by browser buttons
+// Pressing the default browser fullscreen button doesn't run changeScreen()
+const screenButton = player.querySelector('.fullscreen');
 
 /* Build out functions */
 function togglePlay() {
@@ -47,6 +50,20 @@ function scrub(e) {
 	// console.log(e);
 }
 
+function changeScreen() {
+	if (fullscreen) {
+		// fullscreen = !fullscreen;
+		video.webkitExitFullScreen();
+		console.log('Regular screen!');
+	} else {
+		// video.requestFullscreen();
+		video.webkitEnterFullScreen();
+		// fullscreen = !fullscreen;
+		console.log('Full screen!');
+		console.log(`fullscreen is now: ${fullscreen}`);
+	}
+}
+
 /* Hook up the event listeners */
 video.addEventListener('click', togglePlay);
 video.addEventListener('play', updateButton);
@@ -66,3 +83,9 @@ progress.addEventListener('click', scrub);
 progress.addEventListener('mousemove', (e) => mousedown && scrub(e));
 progress.addEventListener('mousedown', () => mousedown = true);
 progress.addEventListener('mouseup', () => mousedown = false);
+
+let fullscreen = false;
+screenButton.addEventListener('click', () => changeScreen());
+// document.addEventListener('fullscreenchange', () => {
+// 	fullscreen = !fullscreen;
+// });
